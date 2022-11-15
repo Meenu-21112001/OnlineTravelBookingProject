@@ -1,5 +1,7 @@
 package com.travel.service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -38,14 +40,15 @@ public class HotelBookingServiceImpl implements HotelBookingService
 	@Override
 	public List<HotelBooking> getAllHotelBooking() throws Exception 
 	{
-			List<HotelBooking> allUsers =  hotelbookingRepository.findAll(); 
+			List<HotelBooking> allUsers =  hotelbookingRepository.findAll();
 			return allUsers;
 	}
 
 	@Override
-	public List<HotelBooking> getHotelByHotelName(String hotelName) throws Exception 
+	public HotelBooking getHotelByHotelName(String hotelName) throws Exception 
 	{
-		List<HotelBooking> hotelbooking=hotelbookingRepository.findAll();
+		HotelBooking hotelbooking=hotelbookingRepository.getHotelByHotelName(hotelName);
+		System.out.println("Inside getHotelByName Method");
 		
 		if(hotelbooking==null)
 		{
@@ -58,45 +61,63 @@ public class HotelBookingServiceImpl implements HotelBookingService
 		
 	}
 
-	/*@Override
-	public List<HotelBooking> getHotelByCost(int costPerDay) throws Exception
+	@Override
+	public String delete(int hotelId)
 	{
-		List<HotelBooking> byCost=hotelbookingRepository.findAll();
+		// TODO Auto-generated method stub
+		hotelbookingRepository.deleteById(hotelId);
+		return "Successfully Deleted ";
+	}
+
+	@Override
+	public List<HotelBooking> getHotelByCost(int cost) throws Exception 
+	{
+		List<HotelBooking> byCost=hotelbookingRepository.getHotelByCost(cost);
 		if(byCost==null)
 		{
-		  	throw new EntityNotFoundException(costPerDay+"Please Provide Valid NumBer Not A Characters");
+		  	throw new EntityNotFoundException(cost+"Please Provide Valid NumBer Not A Characters");
 		}
 		else
 		{
 		return byCost;
 		}
+	}
+
+	/*@Override
+	public HotelBooking getUserById(int hotelId)throws Exception
+	{
+		return hotelbookingRepository.getUserById(hotelId);
+		
+	
 	}*/
 
 	@Override
-	public void delete(int searchUserId)
+	public List<HotelBooking> CostByLowToHigh() throws Exception 
 	{
 		// TODO Auto-generated method stub
-		hotelbookingRepository.deleteById(searchUserId);
-		
+		List<HotelBooking> listByCost=hotelbookingRepository.findAll();
+		Collections.sort(listByCost,new com.travel.sorting.CostByLowToHigh() );
+		return listByCost;
 	}
-    
-	/*@Override
-	public HotelBooking getHotelByHotelName(String hotelName) throws Exception
-	{
-				
-		HotelBooking hotelUserByName = hotelbookingRepository.getHotelByHotelName(hotelName);
 
-				if ( hotelUserByName== null) 
-				{
-					throw new EntityNotFoundException(hotelName + " not available in the database");
-				} 
-				else
-				{
-					return hotelUserByName;
-				}
-		
-		
-	}*/
+	@Override
+	public HotelBooking addHotel() throws Exception 
+	{
+		// TODO Auto-generated method stub
+		hotelbookingRepository.findAll();
+		return null;
+	}
+
+	@Override
+	public List<HotelBooking> CostByHighToLow() throws Exception 
+	{
+		List<HotelBooking> listByCost=hotelbookingRepository.findAll();
+		Collections.sort(listByCost,new com.travel.sorting.CostByHighToLow() );
+		return listByCost;
+	}
+	
+	
+ 
 	
 
 }
